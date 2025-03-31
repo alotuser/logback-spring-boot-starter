@@ -18,6 +18,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.lb.base.BaseLogConfig;
 
+/**
+ * 日志配置
+ */
 @Configuration
 @ConditionalOnClass({ LoggerFactory.class, JoranConfigurator.class })
 public class LoggerConfig {
@@ -34,7 +37,12 @@ public class LoggerConfig {
 	private String totalSizeCap;
 	@Value("${lb.log.isGzip:false}")
 	private boolean isGzip;
-	
+
+	/**
+	 * 日志配置
+	 * 
+	 * @return BaseLogConfig
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	BaseLogConfig logUserConfiguration() {

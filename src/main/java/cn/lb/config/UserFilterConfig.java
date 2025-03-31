@@ -10,12 +10,19 @@ import org.springframework.context.annotation.Configuration;
 import cn.lb.base.BaseUser;
 import cn.lb.filter.UserFilter;
 
-
+/**
+ * 用户过滤器配置
+ */
 @ConditionalOnBean(BaseUser.class)
 @Configuration
 public class UserFilterConfig{
 
-	
+	/**
+     * 用户过滤器
+     * 
+     * @param baseUser
+     * @return FilterRegistrationBean<UserFilter> 
+     */
 	@Bean
 	@ConditionalOnMissingBean
 	FilterRegistrationBean<UserFilter>  filterRegistrationBean(@Autowired BaseUser baseUser) {

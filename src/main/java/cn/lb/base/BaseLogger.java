@@ -2,17 +2,15 @@ package cn.lb.base;
 
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.slf4j.Marker;
-
-
-
 import cn.hutool.aop.ProxyUtil;
 import cn.hutool.aop.aspects.SimpleAspect;
-
+/**
+ * 日志基类
+ */
 public class BaseLogger implements Logger {
 
 	Logger logger;
@@ -25,10 +23,19 @@ public class BaseLogger implements Logger {
 
 	}
 
+	/**
+	 * BaseLogger
+	 * @param baseUser
+	 */
 	public BaseLogger(Class<?> clazz) {
 		this.logger = LoggerFactory.getLogger(clazz);
 	}
 
+	/**
+	 * BaseLogger
+	 * 
+	 * @param baseUser
+	 */
 	public <T> BaseLogger proxyLogger(final Consumer<? super T> before, final Consumer<? super T> after) {
 
 		return ProxyUtil.proxy(this, new SimpleAspect() {
@@ -66,6 +73,11 @@ public class BaseLogger implements Logger {
 
 	}
 
+	/**
+	 * BaseLogger
+	 * 
+	 * @param baseUser
+	 */
 	public BaseLogger proxyLogger() {
 		return proxyLogger(null, null);
 	}

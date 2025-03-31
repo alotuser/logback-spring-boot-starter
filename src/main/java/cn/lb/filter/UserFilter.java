@@ -13,20 +13,32 @@ import org.slf4j.MDC;
 
 import cn.lb.base.BaseUser;
  
-
+/**
+ * 用户过滤器
+ */
 public class UserFilter implements Filter {
 
 	BaseUser baseUser;
 
+	/**
+	 * 构造函数
+	 * 
+	 * @param baseUser
+	 */
 	public UserFilter(BaseUser baseUser) {
 		this.baseUser=baseUser;
 	}
 
+	/**
+	 * 构造函数
+	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 
 	}
-
+	/**
+	 * 过滤器
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		boolean isok = false;
@@ -43,6 +55,9 @@ public class UserFilter implements Filter {
 		}
 	}
 
+	/**
+	 * 销毁
+	 */
 	@Override
 	public void destroy() {
 
