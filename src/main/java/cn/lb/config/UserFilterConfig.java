@@ -15,6 +15,7 @@ import cn.lb.filter.UserFilter;
 @Configuration
 public class UserFilterConfig{
 
+	
 	@Bean
 	@ConditionalOnMissingBean
 	FilterRegistrationBean<UserFilter>  filterRegistrationBean(@Autowired BaseUser baseUser) {
@@ -25,5 +26,5 @@ public class UserFilterConfig{
 	}
 	
 	
-
+	
 }

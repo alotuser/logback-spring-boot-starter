@@ -1,22 +1,47 @@
 <configuration>
-  <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
-    <discriminator>
-      <Key>userId</Key>
-      <DefaultValue>unknown</DefaultValue>
-    </discriminator>
-     <filter class="cn.lb.base.BaseFilter" />
-    <sift>
-      <appender name="FILE-${userId}" class="ch.qos.logback.core.FileAppender">
-        <File>${userId}.log</File>
-        <Append>true</Append>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-          <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %mdc %logger{35} - %msg%n</Pattern>
-        </layout>
-      </appender>
-    </sift>
-  </appender>
+	<appender name="USERSIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>userId</Key>
+			<DefaultValue>unknown</DefaultValue>
+		</discriminator>
+		 
+		<sift>
+			<appender name="FILE-${userId}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<File>${userId}.log</File>
+				<Append>true</Append>
+ 
+				 <encoder charset="UTF-8">
+				   <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %mdc %logger{35} - %msg%n</pattern>
+                </encoder>
+				
+				<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+				<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+					<!-- 归档的日志文件的路径，例如今天是2017-04-26日志，当前写的日志文件路径为file节点指定，可以将此文件与file指定文件路径设置为不同路径，从而将当前日志文件或归档日志文件置不同的目录。 而2017-04-26的日志文件在由fileNamePattern指定。%d{yyyy-MM-dd}指定日期格式，%i指定索引 -->
+					<fileNamePattern>${BAK_PATH}</fileNamePattern>
+					<!-- 除按日志记录之外，还配置了日志文件不能超过500M，若超过500M，日志文件会以索引0开始， 命名日志文件，例如log-error-2017-04-26.0.log -->
+					<maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+					<!--日志文件保留天数 -->
+					<maxHistory>${MAX_HISTORY}</maxHistory>
+					<totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+				</rollingPolicy>
+				
+			</appender>
+		</sift>
+	</appender>
 
-  <root level="DEBUG">
-    <appender-ref ref="SIFT" />
-  </root>
+
+    <logger name="org.springframework.boot" level="warn" />
+    <logger name="org.springframework" level="warn" />
+	<!-- 排除Tomcat核心包日志 -->
+	<logger name="org.apache.catalina" level="ERROR"/>
+    <logger name="org.apache.coyote" level="ERROR"/>
+    <logger name="org.apache.tomcat" level="ERROR"/>
+    
+	<!-- 排除RMI相关日志 -->
+	<logger name="sun.rmi" level="OFF"/>
+ 
+	<!-- 日志输出级别 -->
+	<root level="DEBUG">
+		<appender-ref ref="USERSIFT" />
+	</root>
 </configuration>
