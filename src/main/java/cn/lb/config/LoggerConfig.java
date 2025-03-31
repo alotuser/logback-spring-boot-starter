@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.status.Status;
+import ch.qos.logback.core.status.StatusListener;
+import ch.qos.logback.core.status.StatusManager;
 import ch.qos.logback.core.util.Loader;
 import ch.qos.logback.core.util.StatusPrinter;
 import cn.hutool.core.io.FileUtil;
@@ -49,21 +51,8 @@ public class LoggerConfig {
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		try {
 
-			JoranConfigurator configurator = new JoranConfigurator();
-			configurator.setContext(lc);
-			// lc.reset();
+			 
 			
-
-//			lc.addTurboFilter(new TurboFilter() {
-//				@Override
-//				public FilterReply decide(Marker marker, ch.qos.logback.classic.Logger logger, Level level, String format,Object[] params, Throwable t) {
-//					baseUser.getUserId();
-//					MDC.put(format, format);
-//					
-//					return FilterReply.NEUTRAL;
-//				}
-//			});
-
 			String artifactId = FileNameUtil.mainName(FileUtil.getWebRoot().getName());
 			
 			lc.putProperty("artifactId", artifactId);
@@ -73,12 +62,9 @@ public class LoggerConfig {
 			lc.putProperty("MAX_HISTORY", maxHistory);
 			lc.putProperty("TOTAL_SIZE_CAP", totalSizeCap);
 			lc.putProperty("MAX_FILE_SIZE", maxFileSize);
-			 
-			
+
 			String bakPath = null;
-			
-			 
-			
+
 			if (lblogPath != null&&lblogPath.length()>0) {
 				bakPath=lblogPath+"/"+artifactId+"/user/bak/${userId}/all-log-%d{yyyy-MM-dd}.%i.log"+(isGzip?".gz":"");
 				lc.putProperty("LOG_PATH", lblogPath);
@@ -90,10 +76,18 @@ public class LoggerConfig {
 			    lc.putProperty("BAK_PATH", bakPath);
             }
 			
+			StatusManager sm = lc.getStatusManager();
+			if (sm != null) {
+				sm.add(new StatusListener() {@Override public void addStatusEvent(Status status) {}});
+			}
+			
+			JoranConfigurator configurator = new JoranConfigurator();
+			configurator.setContext(lc);
 			URL url = Loader.getResourceBySelfClassLoader("logback-userid.xml");
 			configurator.doConfigure(url);
 			
-		} catch (JoranException je) {
+			
+		} catch (Exception je) {
 			StatusPrinter.print(lc);
 		}
 
